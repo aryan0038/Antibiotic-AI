@@ -108,7 +108,8 @@ if model is None:
 
 # 3. CONFIGURE GEMINI
 # Replace with your actual key
-genai.configure(api_key="YOUR_API_KEY_HERE") 
+import os
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 # 4. CUSTOM STYLING
 st.markdown("""
@@ -288,4 +289,5 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
