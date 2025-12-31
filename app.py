@@ -108,8 +108,7 @@ if model is None:
 
 # 3. CONFIGURE GEMINI
 # Replace with your actual key
-import os
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+genai.configure(api_key="AIzaSyD45n0EWx_RyuLAv-LK8eaSJLwljr9c01g") 
 
 # 4. CUSTOM STYLING
 st.markdown("""
@@ -210,7 +209,6 @@ if analyze_btn:
         tab1, tab2, tab3 = st.tabs(["📊 Analysis & Actions", "🤖 AI Specialist Opinion", "🧪 Smart Screener"])
         
         # TAB 2: Gemini AI
-       # TAB 2: Gemini AI (With Rate Limit Fix)
         with tab2:
             st.markdown("### Clinical Interpretation")
             with st.spinner("Consulting AI Specialist..."):
@@ -227,15 +225,10 @@ if analyze_btn:
                     response = model_gemini.generate_content(prompt)
                     st.session_state['ai_advice'] = response.text
                     st.info(st.session_state['ai_advice'])
-                    
                 except Exception as e:
-                    # Check if it is a Quota Error (429)
-                    if "429" in str(e):
-                        st.warning("🚦 **High Traffic Warning**: The AI is currently busy (Rate Limit Reached). Please wait 1 minute and try again.")
-                        st.session_state['ai_advice'] = "AI Unavailable due to high traffic. Please check the 'Smart Screener' tab for alternatives."
-                    else:
-                        st.error(f"AI Service Error: {e}")
-                        st.session_state['ai_advice'] = "AI Service Error."
+                    st.session_state['ai_advice'] = "AI Service Unavailable"
+                    st.warning(f"AI Service Error: {e}")
+
         # TAB 1: Core Results
         with tab1:
             r_col1, r_col2 = st.columns([2, 1])
@@ -295,6 +288,3 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
-
-
-
