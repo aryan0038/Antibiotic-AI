@@ -214,7 +214,7 @@ if analyze_btn:
             st.markdown("### Clinical Interpretation")
             with st.spinner("Consulting AI Specialist..."):
                 try:
-                    model_gemini = genai.GenerativeModel('gemini-1.5-flash')
+                    model_gemini = genai.GenerativeModel('gemini-flash-latest')
                     prompt = f"""
                     Patient: {age}yr {gender}, Pathogen: {organism_name}, Drug: {antibiotic_name}.
                     Prediction: {status_text} (Confidence: {confidence:.1f}%).
@@ -289,5 +289,6 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
