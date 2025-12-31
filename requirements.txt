@@ -6,3 +6,4 @@ scikit-learn
 google-generativeai
 fpdf
 matplotlib
+jinja2
