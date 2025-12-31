@@ -3,7 +3,8 @@ pandas
 numpy
 joblib
 scikit-learn
-google-generativeai
+google-generativeai>=0.7.0
 fpdf
 matplotlib
 jinja2
+
