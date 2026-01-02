@@ -132,24 +132,19 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 5. SIDEBAR
-with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/3063/3063176.png", width=60)
-    st.title("DRAP System")
-    st.caption("v2.2 | Clinical Release")
-    st.markdown("---")
-    st.subheader("🧠 Model Intelligence")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.metric("Accuracy", "94.2%", "+1.2%")
-    with col_b:
-        st.metric("F1 Score", "0.91")
-    
-    st.markdown("**Architecture:** Random Forest Classifier")
-    st.markdown("---")
-    if st.button("🔄 Reset / Clear Form"):
-        st.rerun()
-
+# --- SIDEBAR METRICS ---
+with col_a:
+    st.metric(
+        label="System Status",
+        value="Online",
+        delta="v2.1.0"
+    )
+with col_b:
+    st.metric(
+        label="LLM Agent",
+        value="Gemini-1.5",
+        delta="Connected"
+    )
 # 6. MAIN DASHBOARD HEADER
 st.title("🛡️ DRAP: Antibiotic Resistance Predictor")
 st.markdown("---")
@@ -289,6 +284,7 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
 
