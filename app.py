@@ -133,17 +133,23 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- SIDEBAR METRICS ---
+# IMPORTANT: You must define the columns first!
+col_a, col_b = st.columns(2)  
+
+# Now you can use them
 with col_a:
     st.metric(
-        label="System Status",
-        value="Online",
-        delta="v2.1.0"
+        label="Model Accuracy",
+        value="80.8%",
+        delta="Validated"
     )
+
 with col_b:
     st.metric(
-        label="LLM Agent",
-        value="Gemini-1.5",
-        delta="Connected"
+        label="Sensitivity (Recall)",
+        value="74.6%",
+        delta="Safety Optimized",
+        delta_color="normal"
     )
 # 6. MAIN DASHBOARD HEADER
 st.title("🛡️ DRAP: Antibiotic Resistance Predictor")
@@ -284,6 +290,7 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
 
