@@ -132,25 +132,63 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- SIDEBAR METRICS ---
-# IMPORTANT: You must define the columns first!
-# --- SIDEBAR METRICS ---
-# We use st.sidebar.columns to ensure they appear in the sidebar, not the main page
-col_a, col_b = st.sidebar.columns(2) 
-
-with col_a:
-    st.metric(
-        label="System Status",
-        value="Online",
-        delta="v2.1.0"
+# --- SIDEBAR CONFIGURATION ---
+with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/3063/3063176.png", width=80) 
+    st.title("Med-AI Assistant")
+    
+    # 1. NAVIGATION / MODE SELECTOR
+    st.header("⚙️ Control Panel")
+    app_mode = st.selectbox(
+        "Select Operation Mode",
+        ["Clinical Prediction", "Batch Analysis", "Research View"],
+        help="Switch between single patient prediction and bulk data analysis."
     )
+    
+    st.markdown("---")
 
-with col_b:
-    st.metric(
-        label="LLM Agent",
-        value="Gemini-1.5",
-        delta="Connected"
-    )
+    # 2. INTERACTIVE ACTION BUTTONS
+    st.markdown("### Quick Actions")
+    
+    # A "Primary" button stands out (Red/Filled)
+    if st.button("🔄 Reset Patient Form", type="primary", use_container_width=True):
+        # This clears the session state to reset inputs
+        for key in st.session_state.keys():
+            del st.session_state[key]
+        st.rerun()
+
+    # A secondary button for "features"
+    if st.button("📥 Export Report PDF", use_container_width=True):
+        st.toast("Report generation started...", icon="📄")
+        
+    st.markdown("---")
+
+    # 3. ADVANCED SETTINGS (Collapsible to save space but add depth)
+    with st.expander("🛠️ Model Settings"):
+        confidence = st.slider("Confidence Threshold", 0.5, 1.0, 0.85)
+        st.toggle("Show Probability Graphs", value=True)
+        st.caption(f"Current threshold: **{int(confidence*100)}%**")
+        st.info("Lowering threshold increases sensitivity but may raise false positives.")
+
+    st.markdown("---")
+    
+    # --- SIDEBAR METRICS ---
+    st.markdown("### System Health")
+    
+    col_a, col_b = st.columns(2)
+
+    with col_a:
+        st.metric(
+            label="System Status",
+            value="Online",
+            delta="v2.1.0"
+        )
+    with col_b:
+        st.metric(
+            label="LLM Agent",
+            value="Gemini-1.5",
+            delta="Connected"
+        )
 # 6. MAIN DASHBOARD HEADER
 st.title("🛡️ DRAP: Antibiotic Resistance Predictor")
 st.markdown("---")
@@ -290,6 +328,7 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
 
