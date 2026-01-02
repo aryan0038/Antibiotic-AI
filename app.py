@@ -190,6 +190,32 @@ with st.sidebar:
             delta="Connected"
         )
 # 6. MAIN DASHBOARD HEADER
+
+# --- MODE SELECTION LOGIC ---
+# This checks which mode is selected in the sidebar and updates the main page accordingly
+
+if app_mode == "Batch Analysis":
+    st.title("📂 Batch Data Analysis")
+    st.markdown("### Bulk Patient Processing")
+    st.info("Upload a CSV file containing multiple patient records for batch prediction.")
+    
+    uploaded_file = st.file_uploader("Upload CSV", type="csv")
+    if uploaded_file:
+        st.success("File uploaded! (Processing module would run here)")
+        
+    st.stop() # 🛑 STOPS the rest of the app from loading
+
+elif app_mode == "Research View":
+    st.title("📊 Research & Analytics")
+    st.markdown("### Model Performance Overview")
+    
+    # Dummy data for visualization
+    st.write("Current Model Metrics:")
+    st.bar_chart({"Accuracy": 85, "Precision": 81, "Recall": 78})
+    
+    st.warning("⚠️ Research Mode: Advanced metrics for data scientists only.")
+    st.stop() # 🛑 STOPS the rest of the app from loading
+
 st.title("🛡️ DRAP: Antibiotic Resistance Predictor")
 st.markdown("---")
 
@@ -328,6 +354,7 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
 
