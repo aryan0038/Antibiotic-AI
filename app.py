@@ -239,6 +239,7 @@ with st.container():
         analyze_btn = st.button("🚀 Run Analysis", type="primary", use_container_width=True)
 
 # 8. PREDICTION & RESULTS
+# 8. PREDICTION & RESULTS
 if analyze_btn:
     # Processing Animation
     progress_text = "Analyzing resistance markers..."
@@ -254,7 +255,7 @@ if analyze_btn:
         org_code = organism_map[organism_name]
         abx_code = antibiotic_map[antibiotic_name]
         
-        # Predict
+        # Predict using the Random Forest (variable 'model')
         input_data = [[age, gender_code, org_code, abx_code]]
         prediction = model.predict(input_data)[0]
         probs = model.predict_proba(input_data)[0]
@@ -279,7 +280,9 @@ if analyze_btn:
             st.markdown("### Clinical Interpretation")
             with st.spinner("Consulting AI Specialist..."):
                 try:
-                    model = genai.GenerativeModel('gemini-1.5-flash-002')
+                    # FIX: Renamed variable to 'gemini_model' to avoid overwriting 'model'
+                    gemini_model = genai.GenerativeModel('gemini-1.5-flash-002')
+                    
                     prompt = f"""
                     Patient: {age}yr {gender}, Pathogen: {organism_name}, Drug: {antibiotic_name}.
                     Prediction: {status_text} (Confidence: {confidence:.1f}%).
@@ -288,7 +291,8 @@ if analyze_btn:
                     2. Recommended next steps or dosage considerations.
                     Keep it under 100 words.
                     """
-                    response = model_gemini.generate_content(prompt)
+                    # FIX: Used the new variable name here
+                    response = gemini_model.generate_content(prompt)
                     st.session_state['ai_advice'] = response.text
                     st.info(st.session_state['ai_advice'])
                 except Exception as e:
@@ -317,6 +321,7 @@ if analyze_btn:
                 "Age": age, "Gender": gender, 
                 "Organism": organism_name, "Antibiotic": antibiotic_name
             }
+            # Create PDF using the AI advice we just generated
             pdf_bytes = create_pdf(patient_info, status_text, confidence, st.session_state['ai_advice'])
             
             st.download_button(
@@ -327,13 +332,13 @@ if analyze_btn:
                 use_container_width=True
             )
 
-        # TAB 3: NEW FEATURE - SMART SCREENER
+        # TAB 3: SMART SCREENER (This will work now!)
         with tab3:
             st.markdown("### 🧪 Alternative Treatment Screener")
             st.markdown("Scanning model for most effective antibiotics for this specific patient...")
             
             with st.spinner("Screening drug database..."):
-                # Call the new helper function
+                # Call the helper function passing the original 'model' (Random Forest)
                 alt_df = get_alternatives(model, age, gender_code, org_code, antibiotic_map)
                 
                 # Display best options
@@ -343,17 +348,19 @@ if analyze_btn:
                     hide_index=True
                 )
                 
-                best_drug = alt_df.iloc[0]['Antibiotic']
-                best_score = alt_df.iloc[0]['Susceptibility Score']
-                
-                if best_drug != antibiotic_name:
-                    st.success(f"💡 **AI Recommendation:** '{best_drug}' shows a {best_score:.1f}% susceptibility score.")
-                else:
-                    st.success(f"✅ The selected drug '{antibiotic_name}' is already the best option available in the database.")
+                if not alt_df.empty:
+                    best_drug = alt_df.iloc[0]['Antibiotic']
+                    best_score = alt_df.iloc[0]['Susceptibility Score']
+                    
+                    if best_drug != antibiotic_name:
+                        st.success(f"💡 **AI Recommendation:** '{best_drug}' shows a {best_score:.1f}% susceptibility score.")
+                    else:
+                        st.success(f"✅ The selected drug '{antibiotic_name}' is already the best option available in the database.")
 
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
 
