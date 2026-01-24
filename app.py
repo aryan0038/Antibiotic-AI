@@ -282,7 +282,7 @@ if analyze_btn:
                 try:
                     # FIX: Renamed variable to 'gemini_model' to avoid overwriting 'model'
                     # NEW (Working & Safe)
-                    gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+                    gemini_model = genai.GenerativeModel('gemini-3-flash-preview')
                     
                     prompt = f"""
                     Patient: {age}yr {gender}, Pathogen: {organism_name}, Drug: {antibiotic_name}.
@@ -361,6 +361,7 @@ if analyze_btn:
     except Exception as e:
         st.error(f"An error occurred during analysis: {e}")
         #python -m streamlit run app.py
+
 
 
 
